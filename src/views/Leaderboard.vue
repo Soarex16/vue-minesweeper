@@ -1,15 +1,16 @@
 <template>
-  <main-menu />
+  <div>
+    Leaderboard
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 
-import MainMenu from '@/components/MainMenu.vue';
-
 export default Vue.extend({
-  components: {
-    MainMenu,
-  },
 });
 </script>
+
+<style scoped>
+
+</style>
