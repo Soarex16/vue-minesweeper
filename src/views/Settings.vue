@@ -12,7 +12,7 @@
 
         <v-card-text>
           <v-container>
-            <v-radio-group v-model="gameMode">
+            <v-radio-group v-model="gameModeName">
               <v-radio
                 v-for="gm in gameModes"
                 :key="gm.name"
@@ -29,7 +29,8 @@
     </v-row>
 
     <v-row justify="center" class="mt-5">
-      <v-btn color="error">
+      <!-- TODO: сброс стратистики-->
+      <v-btn color="error" @click="resetLeaderboard">
         Сброс статистики
       </v-btn>
     </v-row>
@@ -47,12 +48,11 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import { GameMode, GAME_MODE_CUSTOM } from '@/store/modules/settings/types';
-
-import SettingsMutationTypes from '@/store/modules/settings/mutation-types';
 import gameModes from '@/config';
-
+import { GAME_MODE_CUSTOM } from '@/store/modules/settings/types';
 import SettingsCustomGameModeForm from '@/components/SettingsCustomGameModeForm.vue';
+import SettingsMutationTypes from '@/store/modules/settings/mutation-types';
+import LeaderboardMutationTypes from '@/store/modules/leaderboard/mutation-types';
 import LinkButton from '@/components/LinkButton.vue';
 
 export default Vue.extend({
@@ -67,16 +67,21 @@ export default Vue.extend({
     };
   },
   computed: {
-    gameMode: {
-      get(): GameMode {
+    gameModeName: {
+      get(): string {
         return this.$store.state.settings.currentGameMode.name;
       },
-      set(gmName: string) {
-        this.$store.commit(SettingsMutationTypes.CHANGE_GAME_MODE, gmName);
+      set(value: string) {
+        this.$store.commit(`settings/${SettingsMutationTypes.CHANGE_GAME_MODE}`, value);
       },
     },
-    showGameModeCustomizationForm() {
-      return this.gameMode === GAME_MODE_CUSTOM;
+    showGameModeCustomizationForm(): boolean {
+      return this.gameModeName === GAME_MODE_CUSTOM;
+    },
+  },
+  methods: {
+    resetLeaderboard() {
+      this.$store.commit(`leaderboard/${LeaderboardMutationTypes.RESET}`);
     },
   },
 });

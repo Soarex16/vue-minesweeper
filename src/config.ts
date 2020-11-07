@@ -1,6 +1,6 @@
 import { GAME_MODE_CUSTOM, GameMode } from '@/store/modules/settings/types';
 
-export const MAX_FIELD_FILL_COEFF = 0.5;
+export const MAX_FIELD_FILL_COEFF = 0.6;
 
 const gameModes: GameMode[] = [
   {

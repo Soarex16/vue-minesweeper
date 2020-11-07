@@ -3,9 +3,11 @@ import VueRouter, { RouteConfig } from 'vue-router';
 
 import store from '@/store';
 
-import Home from '@/views/Home.vue';
+import Home from '@/views/MainMenu.vue';
 import Login from '@/views/Login.vue';
 import Settings from '@/views/Settings.vue';
+import Game from '@/views/Game.vue';
+import Leaderboard from '@/views/Leaderboard.vue';
 
 Vue.use(VueRouter);
 
@@ -35,6 +37,16 @@ const routes: Array<RouteConfig> = [
     path: '/settings',
     name: 'Settings',
     component: Settings,
+  },
+  {
+    path: '/game',
+    name: 'Game',
+    component: Game,
+  },
+  {
+    path: '/leaderboard',
+    name: 'Leaderboard',
+    component: Leaderboard,
   },
   {
     path: '/about',

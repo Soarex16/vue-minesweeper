@@ -5,7 +5,7 @@
       thumb-label
       v-model="time"
       min="2"
-      max="20"
+      max="15"
     />
 
     <v-slider
@@ -13,8 +13,7 @@
       thumb-label
       v-model="fieldSize"
       min="10"
-      max="75"
-      step="5"
+      max="30"
     />
 
     <v-slider
@@ -23,7 +22,7 @@
       v-model="bombs"
       min="10"
       :max="maxBombsNum"
-      step="10"
+      step="5"
     />
   </div>
 </template>
@@ -46,7 +45,7 @@ export default Vue.extend({
         return this.$store.state.settings.currentGameMode.time;
       },
       set(value: number) {
-        this.$store.commit(SettingsMutationTypes.CHANGE_TIME, value);
+        this.$store.commit(`settings/${SettingsMutationTypes.CHANGE_TIME}`, value);
       },
     },
     fieldSize: {
@@ -54,21 +53,27 @@ export default Vue.extend({
         return this.$store.state.settings.currentGameMode.fieldSize;
       },
       set(value: number) {
-        this.$store.commit(SettingsMutationTypes.CHANGE_FIELD_SIZE, value);
+        this.$store.commit(`settings/${SettingsMutationTypes.CHANGE_FIELD_SIZE}`, value);
       },
     },
     bombs: {
       get(): number {
-        return this.$store.state.settings.currentGameMode.bombs;
+        return this.$store.state.settings.currentGameMode.bombsNum;
       },
       // TODO: баг, почему-то при смене режима игры вызывается с value=10
       set(value: number) {
-        this.$store.commit(SettingsMutationTypes.CHANGE_BOMBS_NUM, value);
+        this.$store.commit(`settings/${SettingsMutationTypes.CHANGE_BOMBS_NUM}`, value);
       },
     },
-    ...mapGetters({
-      maxBombsNum: 'maxBombsNum',
-    }),
+    ...mapGetters('settings', ['maxBombsNum']),
+  },
+  watch: {
+    maxBombsNum() {
+      console.log(this.maxBombsNum);
+    },
+    bombs() {
+      console.log('b=', this.bombs);
+    },
   },
 });
 </script>

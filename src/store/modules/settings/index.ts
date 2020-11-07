@@ -7,7 +7,7 @@ import SettingsMutationTypes from '@/store/modules/settings/mutation-types';
 import SettingsActionTypes from '@/store/modules/settings/action-types';
 
 const settingsModule: Module<SettingsState, RootState> = {
-  // namespaced: true,
+  namespaced: true,
   state: () => ({
     currentGameMode: {
       name: 'beginner',
@@ -34,15 +34,8 @@ const settingsModule: Module<SettingsState, RootState> = {
       }
       state.currentGameMode = gmCopy;
     },
-    [SettingsMutationTypes.CHANGE_FIELD_SIZE](state, { newFieldSize, maxBombsNum }) {
+    [SettingsMutationTypes.CHANGE_FIELD_SIZE](state, newFieldSize) {
       state.currentGameMode.fieldSize = newFieldSize;
-
-      // при уменьшении размера сетки слайдер количества бомб улетает вправо и превышает 50%
-      // проверяем максимально допустимое количество и при необходимости обновляем
-      const bombsNum = Math.min(state.currentGameMode.bombsNum, maxBombsNum);
-      if (bombsNum !== state.currentGameMode.bombsNum) {
-        state.currentGameMode.bombsNum = bombsNum;
-      }
     },
     [SettingsMutationTypes.CHANGE_BOMBS_NUM](state, newBombsNum: number) {
       state.currentGameMode.bombsNum = newBombsNum;
@@ -52,19 +45,20 @@ const settingsModule: Module<SettingsState, RootState> = {
     },
   },
   actions: {
-    [SettingsActionTypes.UPDATE_FIELD_SIZE](context, newFieldSize: number) {
-      context.commit(SettingsMutationTypes.CHANGE_FIELD_SIZE, {
-        newFieldSize,
-        // https://github.com/vuejs/vuex/issues/640
-        maxBombsNum: context.getters.maxBombsNum,
-      });
+    [SettingsActionTypes.UPDATE_FIELD_SIZE]({ state, getters, commit }, newFieldSize: number) {
+      commit(SettingsMutationTypes.CHANGE_FIELD_SIZE, newFieldSize);
+
+      if (state.currentGameMode.bombsNum > getters.maxBombsNum) {
+        commit(SettingsMutationTypes.CHANGE_BOMBS_NUM, getters.maxBombsNum);
+      }
     },
   },
   getters: {
-    // 50% от общего числа ячеек
     maxBombsNum(state) {
-      return Math.trunc(state.currentGameMode.fieldSize * state.currentGameMode.fieldSize
-        * MAX_FIELD_FILL_COEFF);
+      return Math.trunc(state.currentGameMode.fieldSize ** 2 * MAX_FIELD_FILL_COEFF);
+    },
+    gameModeName(state) {
+      return state.currentGameMode.name;
     },
   },
 };

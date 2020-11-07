@@ -6,6 +6,8 @@ import RootMutationTypes from '@/store/mutation-types';
 import RootActionTypes from '@/store/action-types';
 
 import settings from '@/store/modules/settings';
+import game from '@/store/modules/game';
+import leaderboard from '@/store/modules/leaderboard';
 
 Vue.use(Vuex);
 
@@ -33,6 +35,8 @@ const store: StoreOptions<RootState> = {
   },
   modules: {
     settings,
+    game,
+    leaderboard,
   },
   // не даем стрелять себе в ногу плохим стилем
   strict: process.env.NODE_ENV !== 'production',
