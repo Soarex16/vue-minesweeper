@@ -60,9 +60,9 @@ export default Vue.extend({
       get(): number {
         return this.$store.state.settings.currentGameMode.bombsNum;
       },
-      // TODO: баг, почему-то при смене режима игры вызывается с value=10
       set(value: number) {
         this.$store.commit(`settings/${SettingsMutationTypes.CHANGE_BOMBS_NUM}`, value);
+        alert(value);
       },
     },
     ...mapGetters('settings', ['maxBombsNum']),

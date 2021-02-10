@@ -7,57 +7,72 @@
     elevation="1"
     :color="color"
     x-small
-    @click="handleCellClick"
+    @click="revealCell"
+    @click.right.prevent="markCell"
   >
-    <v-icon dark>
+    <v-icon dark v-if="showIcon">
       {{ icon }}
     </v-icon>
+    <span v-else-if="opened">
+      {{ cell.bombsNear }}
+    </span>
   </v-btn>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { CellValue } from '@/store/modules/game/types';
+
+import { Cell, CellState, CellValue } from '@/store/modules/game/types';
 
 export default Vue.extend({
   props: {
-    value: {
-      type: Number as PropType<CellValue>,
+    cell: {
+      type: Object as PropType<Cell>,
     },
   },
-  data() {
-    return {
-      opened: true,
-    };
-  },
   computed: {
+    opened() {
+      return this.cell.state === CellState.Opened;
+    },
+    // показывать иконку бомбы или число бомб рядом
+    showIcon() {
+      // если бомба и ячейка открыта
+      return (this.cell?.value === CellValue.Bomb && this.cell.state === CellState.Opened)
+      // или ячейка помечена
+      || this.cell?.state === CellState.Marked
+      // или рядом нет бомб (чтобы отображать пустую ячейку)
+      || this.cell?.bombsNear === 0;
+    },
     icon() {
-      if (this.value === 42) {
-        return 'mdi-hexagon-outline';
+      switch (this.cell.state) {
+        case CellState.Closed:
+          return '';
+        case CellState.Marked:
+          return 'mdi-flag';
+        case CellState.Opened:
+          return this.cell.value === CellValue.Bomb ? 'mdi-bomb' : '';
+        default:
+          return '';
       }
-
-      if (this.opened) {
-        return this.value === CellValue.Bomb ? 'mdi-bomb' : '';
-      }
-
-      return '';
     },
     color() {
       if (this.opened) {
-        return this.value === CellValue.Bomb ? 'error' : 'secondary';
+        return this.cell.value === CellValue.Bomb ? 'error' : 'secondary';
       }
 
-      return 'white';
+      return 'gray';
     },
   },
   methods: {
-    handleCellClick() {
-      this.$emit('click');
+    revealCell() {
+      if (this.cell.state === CellState.Opened) {
+        return;
+      }
+      this.$emit('reveal');
+    },
+    markCell() {
+      this.$emit('mark-cell');
     },
   },
 });
 </script>
-
-<style scoped>
-
-</style>

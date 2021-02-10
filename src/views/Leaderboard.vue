@@ -6,7 +6,7 @@
 
     <v-card-text>
       <v-simple-table
-        v-if="sortedResults.length > 0"
+        v-if="topTen.length > 0"
         fixed-header
         height="450"
       >
@@ -25,7 +25,7 @@
         </thead>
 
         <tbody>
-        <tr v-for="(res, i) in sortedResults" :key="i">
+        <tr v-for="(res, i) in topTen" :key="i">
           <td>
             {{ i + 1 }}
           </td>
@@ -65,7 +65,7 @@ export default Vue.extend({
   components: {
     LinkButton,
   },
-  computed: mapGetters('leaderboard', ['sortedResults']),
+  computed: mapGetters('leaderboard', ['topTen']),
 });
 </script>
 

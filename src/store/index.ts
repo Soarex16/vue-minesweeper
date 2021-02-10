@@ -8,8 +8,14 @@ import RootActionTypes from '@/store/action-types';
 import settings from '@/store/modules/settings';
 import game from '@/store/modules/game';
 import leaderboard from '@/store/modules/leaderboard';
+import VuexPersistence from 'vuex-persist';
 
 Vue.use(Vuex);
+
+const persistencePlugin = new VuexPersistence({
+  storage: window.localStorage,
+  modules: ['settings', 'leaderboard'],
+}).plugin;
 
 const store: StoreOptions<RootState> = {
   state: {
@@ -40,6 +46,7 @@ const store: StoreOptions<RootState> = {
   },
   // не даем стрелять себе в ногу плохим стилем
   strict: process.env.NODE_ENV !== 'production',
+  plugins: [persistencePlugin],
 };
 
 export default new Vuex.Store<RootState>(store);
