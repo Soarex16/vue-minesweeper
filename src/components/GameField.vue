@@ -40,6 +40,9 @@ export default Vue.extend({
         this.$emit('reveal-cell', cellValue);
       }
     },
+    gameOver() {
+      this.$emit('game-over');
+    },
   },
 });
 </script>
