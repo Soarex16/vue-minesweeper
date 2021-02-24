@@ -23,7 +23,7 @@
             readonly
             solo
             dense
-            :value="secondsRemaining"
+            :value="formattedRemainigTime"
             hide-details="true"
           />
         </v-col>
@@ -36,6 +36,12 @@
           @game-over="stopGame(false)"
           @reveal-cell="updateScore"
         />
+      </v-row>
+
+      <v-row justify="end">
+        <v-btn @click="goToMenu">
+          Меню
+        </v-btn>
       </v-row>
     </v-col>
 
@@ -53,7 +59,7 @@ import Vue from 'vue';
 import { mapState, mapActions } from 'vuex';
 
 import GameField from '@/components/GameField.vue';
-import GameOverDialog from '@/components/GameEndDialog.vue';
+import GameOverDialog from '@/components/GameOverDialog.vue';
 import GameActionTypes from '@/store/modules/game/action-types';
 import LeaderboardActionTypes from '@/store/modules/leaderboard/action-types';
 import { Cell, CellState, CellValue } from '@/store/modules/game/types';
@@ -63,13 +69,16 @@ interface GameState {
   secondsRemaining: number;
   intervalHandle: number;
 
+  field: Cell[][];
+
   win: boolean;
   endOfGameDialogVisible: boolean;
+
+  unrevealedCells: number;
 }
 
-export default Vue.extend({
+export default Vue.extend<GameState, {}, {}, any>({
   name: 'game',
-  // TODO: before route leave if game started - require confirmation
   components: {
     GameField,
     GameOverDialog,
@@ -97,6 +106,14 @@ export default Vue.extend({
     allCellsRevealed() {
       return this.unrevealedCells === this.currentGameMode.bombsNum;
     },
+    formattedRemainigTime() {
+      const minutes = Math.trunc(this.secondsRemaining / 60);
+      const seconds = this.secondsRemaining - minutes * 60;
+
+      const mStr = minutes.toString().padStart(2, '0');
+      const sStr = seconds.toString().padStart(2, '0');
+      return `${mStr}:${sStr}`;
+    },
   },
   methods: {
     ...mapActions('game', {
@@ -122,7 +139,7 @@ export default Vue.extend({
 
       this.endOfGameDialogVisible = false;
 
-      this.secondsRemaining = this.currentGameMode.time;
+      this.secondsRemaining = this.currentGameMode.time * 60;
       this.unrevealedCells = this.currentGameMode.fieldSize ** 2;
 
       this.generateField();
@@ -141,6 +158,9 @@ export default Vue.extend({
       this.endOfGameDialogVisible = true;
 
       this.addResultToLeaderboard(this.score);
+    },
+    goToMenu() {
+      this.$router.push({ name: 'Home' });
     },
     startTimer() {
       this.intervalHandle = setInterval(() => {
@@ -213,6 +233,16 @@ export default Vue.extend({
   },
   created() {
     this.newGame();
+  },
+  beforeRouteLeave(to, from, next) {
+    if (!this.gameStarted) {
+      next();
+      return;
+    }
+
+    if (window.confirm('При переходе в меню прогресс игры будет сброшен. Продолжить?')) {
+      next();
+    }
   },
 });
 </script>

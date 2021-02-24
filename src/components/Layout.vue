@@ -58,7 +58,7 @@ export default Vue.extend({
   methods: {
     logout() {
       this.$store.dispatch(RootActionTypes.LOGOUT);
-      this.$router.push('/login');
+      this.$router.push({ name: 'Login' });
     },
   },
 });

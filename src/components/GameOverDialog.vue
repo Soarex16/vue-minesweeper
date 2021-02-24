@@ -6,7 +6,7 @@
   >
     <v-card>
       <v-card-title class="headline">
-        Вы проиграли :(
+        {{this.title}}
       </v-card-title>
 
       <v-card-text>

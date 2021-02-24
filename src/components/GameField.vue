@@ -6,7 +6,6 @@
         :key="j"
         :cell="cell"
         @reveal="revealCell(i, j)"
-        @mark-cell="markCell(i, j)"
       />
     </v-row>
   </v-col>
@@ -40,21 +39,6 @@ export default Vue.extend({
       } else {
         this.$emit('reveal-cell', cellValue);
       }
-    },
-    markCell(i: number, j: number) {
-      let newState: CellState = CellState.Closed;
-      if (this.field[i][j].state === CellState.Closed) {
-        newState = CellState.Marked;
-      } else if (this.field[i][j].state === CellState.Marked) {
-        newState = CellState.Closed;
-      }
-
-      Vue.set(this.field[i][j], 'state', newState);
-      // emit event to start game
-      this.$emit('start-game');
-    },
-    gameOver() {
-      this.$emit('game-over');
     },
   },
 });

@@ -62,18 +62,9 @@ export default Vue.extend({
       },
       set(value: number) {
         this.$store.commit(`settings/${SettingsMutationTypes.CHANGE_BOMBS_NUM}`, value);
-        alert(value);
       },
     },
     ...mapGetters('settings', ['maxBombsNum']),
-  },
-  watch: {
-    maxBombsNum() {
-      console.log(this.maxBombsNum);
-    },
-    bombs() {
-      console.log('b=', this.bombs);
-    },
   },
 });
 </script>

@@ -1,7 +1,6 @@
 export enum CellState {
   Closed = 0,
-  Opened = 1,
-  Marked = 2
+  Opened = 1
 }
 
 export enum CellValue {

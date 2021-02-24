@@ -8,7 +8,6 @@
     :color="color"
     x-small
     @click="revealCell"
-    @click.right.prevent="markCell"
   >
     <v-icon dark v-if="showIcon">
       {{ icon }}
@@ -38,8 +37,6 @@ export default Vue.extend({
     showIcon() {
       // если бомба и ячейка открыта
       return (this.cell?.value === CellValue.Bomb && this.cell.state === CellState.Opened)
-      // или ячейка помечена
-      || this.cell?.state === CellState.Marked
       // или рядом нет бомб (чтобы отображать пустую ячейку)
       || this.cell?.bombsNear === 0;
     },
@@ -47,8 +44,6 @@ export default Vue.extend({
       switch (this.cell.state) {
         case CellState.Closed:
           return '';
-        case CellState.Marked:
-          return 'mdi-flag';
         case CellState.Opened:
           return this.cell.value === CellValue.Bomb ? 'mdi-bomb' : '';
         default:
@@ -69,9 +64,6 @@ export default Vue.extend({
         return;
       }
       this.$emit('reveal');
-    },
-    markCell() {
-      this.$emit('mark-cell');
     },
   },
 });
