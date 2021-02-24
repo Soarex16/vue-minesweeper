@@ -18,7 +18,12 @@ import { Cell, CellState, CellValue } from '@/store/modules/game/types';
 
 import GameFieldCell from '@/components/GameFieldCell.vue';
 
-export default Vue.extend({
+interface GameFieldMethods {
+  revealCell(i: number, j: number): void;
+  gameOver(): void;
+}
+
+export default Vue.extend<{}, GameFieldMethods, {}, { field: any }>({
   components: {
     GameFieldCell,
   },

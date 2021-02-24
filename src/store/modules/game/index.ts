@@ -20,10 +20,16 @@ const gameModule: Module<GameState, RootState> = {
   },
   actions: {
     [GameActionTypes.OPEN_EMPTY_CELL]({ commit, rootState }) {
+      // не разобрался как заставить typescript видеть модули стора
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
       const points = rootState.settings.currentGameMode.points.empty;
       commit(GameMutationTypes.UPDATE_SCORE, points);
     },
     [GameActionTypes.ADD_POINTS_FOR_BOMBS]({ commit, rootState }) {
+      // не разобрался как заставить typescript видеть модули стора
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
       const points = rootState.settings.currentGameMode.points.bomb;
       commit(GameMutationTypes.UPDATE_SCORE, points);
     },

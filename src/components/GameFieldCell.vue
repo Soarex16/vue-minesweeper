@@ -23,7 +23,18 @@ import Vue, { PropType } from 'vue';
 
 import { Cell, CellState, CellValue } from '@/store/modules/game/types';
 
-export default Vue.extend({
+interface GameFieldCellMethods {
+  revealCell(): void;
+}
+
+interface GameFieldCellComputed {
+  opened: boolean;
+  showIcon: boolean;
+  icon: string;
+  color: string;
+}
+
+export default Vue.extend<{}, GameFieldCellMethods, GameFieldCellComputed, {cell: any}>({
   props: {
     cell: {
       type: Object as PropType<Cell>,
